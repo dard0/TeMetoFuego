@@ -3,7 +3,7 @@ package tuberias.estructura;
 import java.util.Random;
 
 public enum Direccion {
-	ARRIBA, ABAJO, DERECHA, IZQUIERDA;
+	ARRIBA, DERECHA, ABAJO, IZQUIERDA;
 	
 	public Direccion opuesta(Direccion direccion){
 		
