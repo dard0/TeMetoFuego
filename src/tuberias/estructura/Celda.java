@@ -10,6 +10,7 @@ public class Celda {
 	private int caudal;
 	private boolean saturada;
 	private boolean vacia;
+	private Posicion posicion;
 	
 	//CONSTRUCTORES
 	public Celda(){
@@ -27,7 +28,6 @@ public class Celda {
 		this.vacia = true;
 		this.vecinas = new HashMap<Direccion, Celda>();
 		
-		//T_D_S P_T_S
 		// vecinas.put(Direccion.DERECHA, new Celda(23));
 	}
 	
@@ -52,6 +52,16 @@ public class Celda {
 		return vacia;
 	}
 	
+	public Posicion getPosicion() {
+		return posicion;
+	}
+	
+	// SETTERS
+
+	public void setPosicion(Posicion posicion) {
+		this.posicion = posicion;
+	}
+
 	//FUNCIONALIDAD
 	public void incrementarCaudal(){
 		if (this.caudal+1 <= CAPACIDAD_MAXIMA) this.caudal++;
@@ -61,13 +71,16 @@ public class Celda {
 	}
 	
 	public void establecerVecina(Celda celda, Direccion direccion){
-		
+		this.vecinas.put(direccion, celda);
 	}
 	
-
-
-
-
-
+	public Celda consultarVecina(Direccion direccion){
+		if (this.vecinas.get(direccion) != null) return this.vecinas.get(direccion);
+		else return null;
+	}
+	
+	public void resetearVecindad(){
+		this.vecinas.clear();
+	}
 
 }
