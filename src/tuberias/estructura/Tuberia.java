@@ -20,14 +20,15 @@ public class Tuberia {
 	
 	public boolean establecerCelda(Celda celda, Posicion posicion){
 		
-		// Caso Aaa
+		// Caso A
+		if ((posicion.getX()<0)||(posicion.getY()<0)||(posicion.getX()>=anchura)||(posicion.getY()>=altura)) return false;
 		if (matriz[posicion.getX()][posicion.getY()] == null){
 			
 			////// Comprobar cuantas vecinas tiene
 			Direccion[] direcciones = Direccion.values();
 			int contador = 0;
 			for (int i = 0; i < direcciones.length; i++){
-				if (posicion.adyacente(direcciones[i])!=null){
+				if (obtenerVecina(posicion, direcciones[i]) != null){
 					contador++;
 				}
 			}
@@ -39,20 +40,22 @@ public class Tuberia {
 				celda.setPosicion(posicion);
 				celda.resetearVecindad();
 				for (int i = 0; i < direcciones.length; i++){
-					if (celda.consultarVecina(direcciones[i])!=null){
+					if (obtenerVecina(posicion, direcciones[i]) != null){
 						celda.establecerVecina(celda, direcciones[i]);
 						}
 					}
 				matriz[posicion.getX()][posicion.getY()] = celda;
 				return true;
-			}else return false;
+			}else {
+				return false;
+			}
 			// CASO B
 		}else {
 			Direccion[] direcciones = Direccion.values();
 			celda.setPosicion(posicion);
 			celda.resetearVecindad();
 			for (int i = 0; i < direcciones.length; i++){
-				if (celda.consultarVecina(direcciones[i])!=null){
+				if (obtenerVecina(posicion, direcciones[i]) != null){
 					celda.establecerVecina(celda, direcciones[i]);
 					}
 				}
@@ -64,7 +67,7 @@ public class Tuberia {
 	
 	//TODO Revisar aliasing - Porsiaca
 	public Celda obtenerVecina(Posicion posicion, Direccion direccion){
-		
+		if ((posicion.adyacente(direccion).getX()<0)||(posicion.adyacente(direccion).getY()<0)||(posicion.adyacente(direccion).getX()>=anchura)||(posicion.adyacente(direccion).getY()>=altura)) return null;
 		return matriz[posicion.adyacente(direccion).getX()][posicion.adyacente(direccion).getY()];
 		
 	}
@@ -75,11 +78,13 @@ public class Tuberia {
 	}
 	
 	public Celda obtenerCelda(Posicion posicion){
+		if ((posicion.getX()<0)||(posicion.getY()<0)||(posicion.getX()>=anchura)||(posicion.getY()>=altura)) return null;
 		return matriz[posicion.getX()][posicion.getY()];
 	}
 	
 	public void contruirTubo(Posicion posicion, Direccion direccion, int longitud){
 		
+		boolean fallo = true;
 		int ejeXCalculado = posicion.getX();
 		int ejeYCalculado = posicion.getY();
 		switch(direccion){
@@ -89,7 +94,7 @@ public class Tuberia {
 			case IZQUIERDA: ejeXCalculado = ejeXCalculado - longitud ; break;
 		}
 		
-		if ((ejeXCalculado<=anchura)&&(ejeYCalculado<=altura)&&(ejeXCalculado>=0)&&(ejeYCalculado>=0)){ 
+		if ((ejeXCalculado<=anchura)&&(ejeYCalculado<=altura)&&(ejeXCalculado>=0)&&(ejeYCalculado>=0)&&(longitud>0)){
 			Celda nuevaCelda = new Celda();
 			nuevaCelda.setPosicion(posicion);
 			establecerCelda(nuevaCelda, nuevaCelda.getPosicion());
@@ -109,7 +114,8 @@ public class Tuberia {
 				Posicion nuevaPosicion = new Posicion(ejeX, ejeY);
 				celdaAdyacente.setPosicion(nuevaPosicion);
 				establecerCelda(celdaAdyacente, celdaAdyacente.getPosicion());
-			}
-		}
+				fallo = false;
+			}System.out.println("Tubo creado correctamente");
+		}if (fallo)System.out.println("Error en la creacion del tubo, revise los parametros insertados");
 	}
 }
